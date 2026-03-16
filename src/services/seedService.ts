@@ -1,54 +1,9 @@
 import { db, auth, handleFirestoreError, OperationType } from '../firebase';
 import { collection, addDoc, serverTimestamp, getDocs, query, limit } from 'firebase/firestore';
 
-const DUMMY_BOOKS = [
-// ... existing books ...
-  {
-    title: 'Qalandar Shaoor',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/qalandar/400/600',
-    description: 'A masterpiece on spiritual consciousness and the path of the Qalandar.',
-    category: 'Philosophy',
-    pdfUrl: '#',
-    tags: ['Sufism', 'Consciousness']
-  },
-  {
-    title: 'Loh-o-Qalam',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/loh/400/600',
-    description: 'Exploring the divine pen and the secrets of creation.',
-    category: 'Metaphysics',
-    pdfUrl: '#',
-    tags: ['Creation', 'Divine']
-  },
-  {
-    title: 'Roohani Ilaj',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/healing/400/600',
-    description: 'A comprehensive guide to spiritual healing and remedies.',
-    category: 'Healing',
-    pdfUrl: '#',
-    tags: ['Healing', 'Remedies']
-  },
-  {
-    title: 'Muraqaba',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/muraqaba/400/600',
-    description: 'The art and science of Sufi meditation.',
-    category: 'Practice',
-    pdfUrl: '#',
-    tags: ['Meditation', 'Focus']
-  },
-  {
-    title: 'Tazkira-e-Qalandar Baba Auliya',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/auliya/400/600',
-    description: 'Biography and teachings of the great Sufi master.',
-    category: 'Biography',
-    pdfUrl: '#',
-    tags: ['History', 'Master']
-  }
-];
+import { LARGE_BOOK_DATA } from '../data/books';
+
+const DUMMY_BOOKS = LARGE_BOOK_DATA;
 
 const DUMMY_HEALING = [
   { patientName: 'Ahmed Khan', issue: 'Chronic Migraine', status: 'Completed' },

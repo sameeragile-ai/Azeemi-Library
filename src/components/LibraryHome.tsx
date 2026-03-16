@@ -1,47 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
 import { Book } from '../types';
+import { db } from '../firebase';
+import { collection, getDocs, query, limit } from 'firebase/firestore';
 
 interface Props {
   onSelectBook: (book: Book) => void;
   onNavigate: (view: any) => void;
 }
 
-const DUMMY_BOOKS: Book[] = [
-  {
-    id: '1',
-    title: 'Qalandar Shaoor',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/qalandar/400/600',
-    description: 'A masterpiece on spiritual consciousness and the path of the Qalandar.',
-    category: 'Philosophy',
-    pdfUrl: '#',
-    tags: ['Sufism', 'Consciousness']
-  },
-  {
-    id: '2',
-    title: 'Loh-o-Qalam',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/loh/400/600',
-    description: 'Exploring the divine pen and the secrets of creation.',
-    category: 'Metaphysics',
-    pdfUrl: '#',
-    tags: ['Creation', 'Divine']
-  },
-  {
-    id: '3',
-    title: 'Roohani Ilaj',
-    author: 'Hazrat Khwaja Shamsuddin Azeemi',
-    coverUrl: 'https://picsum.photos/seed/healing/400/600',
-    description: 'A comprehensive guide to spiritual healing and remedies.',
-    category: 'Healing',
-    pdfUrl: '#',
-    tags: ['Healing', 'Remedies']
-  }
-];
-
 export default function LibraryHome({ onSelectBook, onNavigate }: Props) {
+  const [featuredBooks, setFeaturedBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      const q = query(collection(db, 'library_books'), limit(3));
+      const snap = await getDocs(q);
+      setFeaturedBooks(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Book)));
+    };
+    fetchFeatured();
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       {/* Hero Section */}
@@ -107,13 +87,16 @@ export default function LibraryHome({ onSelectBook, onNavigate }: Props) {
       <section className="py-12 space-y-8">
         <div className="flex items-center justify-between">
           <h3 className="text-3xl font-bold text-text-main">Paths of Learning</h3>
-          <button className="text-primary font-bold flex items-center gap-1 hover:underline">
+          <button 
+            onClick={() => onNavigate('library')}
+            className="text-primary font-bold flex items-center gap-1 hover:underline"
+          >
             View All <ChevronRight size={20} />
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {DUMMY_BOOKS.map((book) => (
+          {featuredBooks.map((book) => (
             <motion.div
               key={book.id}
               whileHover={{ y: -8 }}

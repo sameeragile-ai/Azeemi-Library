@@ -27,10 +27,17 @@ import { Book } from './types';
 
 type View = 'home' | 'library' | 'scholar' | 'healing' | 'muraqaba' | 'reader' | 'admin';
 
+import LibraryBrowser from './components/LibraryBrowser';
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [currentView, setCurrentView] = useState<View>('home');
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [libraryState, setLibraryState] = useState({
+    page: 1,
+    searchQuery: '',
+    category: 'All'
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
@@ -61,19 +68,11 @@ export default function App() {
         return <LibraryHome onSelectBook={handleBookSelect} onNavigate={setCurrentView} />;
       case 'library':
         return (
-          <div className="p-8 max-w-7xl mx-auto space-y-12">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <h2 className="text-3xl font-bold mb-8">Spiritual Archive</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <LibraryHome onSelectBook={handleBookSelect} onNavigate={setCurrentView} />
-                </div>
-              </div>
-              <div className="space-y-8">
-                <KnowledgeGraph />
-              </div>
-            </div>
-          </div>
+          <LibraryBrowser 
+            onSelectBook={handleBookSelect} 
+            state={libraryState} 
+            onStateChange={setLibraryState} 
+          />
         );
       case 'scholar':
         return <ScholarChat />;
